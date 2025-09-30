@@ -69,6 +69,7 @@ if not st.session_state.logged_in:
         if st.session_state.username in username:
             st.session_state.logged_in = True
             st.success('ログイン成功')
+            print('ログイン成功')
             st.rerun()
         else:
             st.error('ユーザー名がありません')
@@ -91,6 +92,8 @@ else:
     st.text('②まったく同じ質問でも回答が返る場合と返らない場合が稀に有ります。')
     st.text('③同じ意図の質問でも、質問の仕方によって回答に若干の変化があります')
     st.text('This is test')
+
+    print('95行目')
 
 
     #新しいチャットを作成するための関数 -----------------------------------------------------------------------------------------------
