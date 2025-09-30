@@ -1,9 +1,9 @@
-openai == 1.95.1
-azure-search-documents == 11.5.3
-streamlit == 1.46.1
-python-dotenv == 1.0.1
-azure-core == 1.34.0
-firestore == 0.0.8
-firebase_admin == 7.1.0
-google-cloud-core == 2.4.3
-google-cloud-firestore == 2.21.0
+openai 
+azure-search-documents 
+streamlit 
+python-dotenv 
+azure-core 
+firestore 
+firebase_admin
+google-cloud-core 
+google-cloud-firestore 
