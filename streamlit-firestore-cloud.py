@@ -8,6 +8,7 @@ from openai import AzureOpenAI
 from azure.core.credentials import AzureKeyCredential
 from azure.search.documents import SearchClient
 from azure.search.documents.models import VectorizedQuery
+import json
 
 
 #環境ファイルの読み込み
@@ -95,7 +96,6 @@ else:
 
     st.write('ここまでは描画可能')
 
-
     #新しいチャットを作成するための関数 -----------------------------------------------------------------------------------------------
     def create_new_chat():
         st.session_state.displayed_chat_title = NEW_CHAT_TITLE #現在表示されているチャットのタイトルを保持する
@@ -122,7 +122,9 @@ else:
 
 
     #主要部分 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    st.write('dbの宣言開始')
     db = firestore.Client(project=GCP_PROJECT)
+    st.write('dbの設定終了')
 
     #ユーザーのセッション状態の初期化
     #if "user" not in st.session_state: #セッションに'user'というキーが存在しない場合、デフォルトのユーザー名をCHATBOT_USERに設定する
@@ -130,12 +132,13 @@ else:
 
     #チャットリファレンスの初期化
     if "chats_ref" not in st.session_state:# 'chat_ref'がセッションに存在しない場合、firestoreのデータベースからユーザーのチャットコレクションへのリファレンスを取得する
-        st.write('usersを取得開始')
+        st.write('usersを取得開始')#エラーロギング
         user_ref = db.collection("users") #ユーザーのドキュメントを取得
-        st.write('usersの取得終了')
+        st.write('usersの取得終了')#エラーロギング
 
-        st.write(st.session_state.username)
+        st.write('queryの取得開始')#エラーロギング
         query = user_ref.where("username","==",st.session_state.username).limit(1).get()
+        st.write('queryの設定完了')
         doc = query[0]
         st.session_state.chats_ref = user_ref.document(doc.id).collection("chats") #そのユーザーに関連するチャットのコレクションをchat_refとして保存する
 
@@ -145,6 +148,7 @@ else:
                 doc.to_dict()["title"]
                 for doc in st.session_state.chats_ref.order_by("created").stream()
                 ]
+        st.write('チャットタイトルの取得完了')
 
     #表示中のチャットリファレンスの初期化
     if "displayed_chat_ref" not in st.session_state:
