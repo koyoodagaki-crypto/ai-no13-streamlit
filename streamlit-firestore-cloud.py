@@ -49,14 +49,9 @@ system_message_chat_conversation = "与えられた情報に従って正確で�
 # 定義ここまで ------------------------------------------------------------------------------------------------------------------------------
 
 #ユーザー名チェック
-db = firestore.Client(project=GCP_PROJECT)
 
-def can_login(username: str) -> bool:
-    if not username:
-        return False
-    users_ref = db.collection("users")
-    query = users_ref.where("username","==",username).limit(1).get()
-    return len(query) > 0
+username = st.secrets.api_keys.USER_NAMES.split(",")
+print(username)
 
 #セッションステートでログイン状態を保持
 if "logged_in" not in st.session_state:
@@ -71,7 +66,7 @@ if not st.session_state.logged_in:
     st.session_state.username = st.text_input('ユーザー名を入力してください')
 
     if st.button("ログイン"):
-        if can_login(st.session_state.username):
+        if st.session_state.username in username:
             st.session_state.logged_in = True
             st.success('ログイン成功')
             st.rerun()
@@ -123,6 +118,7 @@ else:
 
     #実行関数 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
     def run():
+        db = firestore.Client(project=GCP_PROJECT)
 
         #azure open ai client(ユーザー質問要約用)の初期化
         openai_client = AzureOpenAI(
