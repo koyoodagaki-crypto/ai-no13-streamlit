@@ -49,7 +49,7 @@ system_message_chat_conversation = "与えられた情報に従って正確で�
 # 定義ここまで ------------------------------------------------------------------------------------------------------------------------------
 
 #ユーザー名チェック
-db = firestore.Client()
+db = firestore.Client(project=GCP_PROJECT)
 
 def can_login(username: str) -> bool:
     if not username:
