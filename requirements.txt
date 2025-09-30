@@ -6,4 +6,4 @@ azure-core == 1.34.0
 firestore == 0.0.8
 firebase_admin == 7.1.0
 google-cloud-core == 2.4.3
-google-coud-firestore
+google-cloud-firestore == 2.21.0
