@@ -121,36 +121,12 @@ else:
     #主要部分 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
     db = firestore.Client(project=GCP_PROJECT)
 
-    #azure open ai client(ユーザー質問要約用)の初期化
-    openai_client = AzureOpenAI(
-        azure_endpoint=AOAI_ENDPOINT, 
-        api_key=AOAI_API_KEY,
-        api_version=AOAI_API_VERSION
-    )
-
-    #azure open ai client(RAG回答生成用)の初期化
-    openai_client2 = AzureOpenAI(
-        azure_endpoint=AOAI2_ENDPOINT, 
-        api_key=AOAI2_API_KEY,
-        api_version=AOAI2_API_VERSION
-    )
-
-    # Azure AI SearchのAPIに接続するためのクライアントを生成する
-    search_client = SearchClient(
-        endpoint=SEARCH_SERVICE_ENDPOINT, 
-        index_name=SEARCH_SERVICE_INDEX_NAME, 
-        credential=AzureKeyCredential(SEARCH_SERVICE_API_KEY) 
-    )
-
-
     #ユーザーのセッション状態の初期化
     #if "user" not in st.session_state: #セッションに'user'というキーが存在しない場合、デフォルトのユーザー名をCHATBOT_USERに設定する
         #A   st.session_state.user = CHATBOT_USER 
 
     #チャットリファレンスの初期化
     if "chats_ref" not in st.session_state:# 'chat_ref'がセッションに存在しない場合、firestoreのデータベースからユーザーのチャットコレクションへのリファレンスを取得する
-        db = firestore.Client(project=GCP_PROJECT) #firestoreのクライアントを作成する
-
         print('usersを取得開始')
         user_ref = db.collection("users") #ユーザーのドキュメントを取得
         print('usersの取得終了')
@@ -223,6 +199,13 @@ else:
             出力は、会話のタイトルのみにしてください。
             ユーザーの入力文: {user_input_text} """
 
+            #azure open ai client(ユーザー質問要約用)の初期化
+            openai_client = AzureOpenAI(
+                azure_endpoint=AOAI_ENDPOINT, 
+                api_key=AOAI_API_KEY,
+                api_version=AOAI_API_VERSION
+            )
+
             #チャットのタイトルを決めるために、OpenAIの機能でユーザーの入力文を要約する
             response = openai_client.chat.completions.create(
                 model=AOAI_MODEL_NAME,
@@ -251,6 +234,13 @@ else:
 
         with st.spinner("回答を生成中です..."):
 
+            #azure open ai client(RAG回答生成用)の初期化
+            openai_client2 = AzureOpenAI(
+                azure_endpoint=AOAI2_ENDPOINT, 
+                api_key=AOAI2_API_KEY,
+                api_version=AOAI2_API_VERSION
+            )
+
             # Azure OpenAI Serviceの埋め込み用APIを用いて、ユーザーからの質問をベクトル化する。
             response = openai_client2.embeddings.create(
                 input = user_input_text,
@@ -262,6 +252,13 @@ else:
                 vector=response.data[0].embedding,
                 k_nearest_neighbors=3,
                 fields="text_vector"
+            )
+
+               # Azure AI SearchのAPIに接続するためのクライアントを生成する
+            search_client = SearchClient(
+                endpoint=SEARCH_SERVICE_ENDPOINT, 
+                index_name=SEARCH_SERVICE_INDEX_NAME, 
+                credential=AzureKeyCredential(SEARCH_SERVICE_API_KEY) 
             )
 
             # ベクトル化された質問を用いて、Azure AI Searchに対してベクトル検索を行う。
