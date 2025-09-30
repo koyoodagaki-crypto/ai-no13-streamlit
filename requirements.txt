@@ -1,7 +1,6 @@
 openai 
 azure-search-documents 
-streamlit 
-python-dotenv 
+streamlit == 1.46.1
 azure-core 
 firestore 
 firebase_admin
