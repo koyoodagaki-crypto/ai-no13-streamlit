@@ -80,7 +80,7 @@ if not st.session_state.logged_in:
 #　ログイン後ページ (チャット画面)
 # ===========================
 else:
-    print("メインページ描画開始")
+    print(st.session_state.username)
 
     #タイトル表示
     st.title('設備技術 RAGアプリ（プロト）')
@@ -93,7 +93,7 @@ else:
     st.text('③同じ意図の質問でも、質問の仕方によって回答に若干の変化があります')
     st.text('This is test')
 
-    print('95行目')
+    print('ここまでは描画可能')
 
 
     #新しいチャットを作成するための関数 -----------------------------------------------------------------------------------------------
@@ -134,6 +134,7 @@ else:
         user_ref = db.collection("users") #ユーザーのドキュメントを取得
         print('usersの取得終了')
 
+        st.write(st.session_state.username)
         query = user_ref.where("username","==",st.session_state.username).limit(1).get()
         doc = query[0]
         st.session_state.chats_ref = user_ref.document(doc.id).collection("chats") #そのユーザーに関連するチャットのコレクションをchat_refとして保存する
