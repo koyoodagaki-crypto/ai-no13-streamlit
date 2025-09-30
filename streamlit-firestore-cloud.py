@@ -51,7 +51,7 @@ system_message_chat_conversation = "与えられた情報に従って正確で�
 #ユーザー名チェック
 
 username = st.secrets.api_keys.USER_NAMES.split(",")
-print(username)
+#print(username)
 
 #セッションステートでログイン状態を保持
 if "logged_in" not in st.session_state:
@@ -141,7 +141,6 @@ else:
             credential=AzureKeyCredential(SEARCH_SERVICE_API_KEY) 
         )
 
-        print('run関数呼ばれた')
 
         #ユーザーのセッション状態の初期化
         #if "user" not in st.session_state: #セッションに'user'というキーが存在しない場合、デフォルトのユーザー名をCHATBOT_USERに設定する
@@ -150,7 +149,11 @@ else:
         #チャットリファレンスの初期化
         if "chats_ref" not in st.session_state:# 'chat_ref'がセッションに存在しない場合、firestoreのデータベースからユーザーのチャットコレクションへのリファレンスを取得する
             db = firestore.Client(project=GCP_PROJECT) #firestoreのクライアントを作成する
+
+            print('usersを取得開始')
             user_ref = db.collection("users") #ユーザーのドキュメントを取得
+            print('usersの取得終了')
+
             query = user_ref.where("username","==",st.session_state.username).limit(1).get()
             doc = query[0]
             st.session_state.chats_ref = user_ref.document(doc.id).collection("chats") #そのユーザーに関連するチャットのコレクションをchat_refとして保存する
@@ -176,6 +179,8 @@ else:
         
         # Sidebarの構築
         #サイドバーに新しいチャットを開始するボタンと過去のチャットのリストを表示する
+        print('サイドバー処理開始')
+
         with st.sidebar:
             #チャットボット使用ユーザーの表示
             st.subheader(f"ユーザー : {st.session_state.username}")
@@ -192,6 +197,8 @@ else:
             for doc in st.session_state.chats_ref.order_by("created").stream():
                 data = doc.to_dict()
                 st.button(data["title"], on_click=change_displayed_chat, args=(doc, ))
+
+        print('サイドバー処理終了')
 
         #メッセージの表示
         # displayed_chat_messagesに格納されたメッセージをループし、各メッセージのロール（ユーザーまたはチャットボット）に応じて表示
