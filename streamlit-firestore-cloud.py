@@ -79,6 +79,7 @@ if not st.session_state.logged_in:
 #　ログイン後ページ (チャット画面)
 # ===========================
 else:
+    print("メインページ描画開始")
 
     #タイトル表示
     st.title('設備技術 RAGアプリ（プロト）')
