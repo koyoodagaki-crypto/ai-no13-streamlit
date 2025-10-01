@@ -92,10 +92,12 @@ else:
     st.write('dbの宣言開始')
     #firebaseの初期化
     if not firebase_admin._apps:
-        cred = credentials.Certificate(json.loads(st.secrets["firebase"]["firebase_key"]))
+        cred_dict = json.loads(st.secrets["firebase"]["firebase_key"])
+        cred = credentials.Certificate(cred_dict)
         firebase_admin.initialize_app(cred)
         db1 = firestore.Client(project=GCP_PROJECT)
     st.write('dbの設定終了')
+
 
     #新しいチャットを作成するための関数 -----------------------------------------------------------------------------------------------
     def create_new_chat():
@@ -326,4 +328,5 @@ else:
             }
             st.session_state.displayed_chat_messages.append(assistant_output_data) #LLMの回答を会話履歴に追加する
             st.session_state.displayed_chat_ref.collection("messages").add(assistant_output_data) #firestoreにLLMの回答を追加する
+
 
