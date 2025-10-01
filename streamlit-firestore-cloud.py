@@ -87,7 +87,6 @@ else:
     st.text('③同じ意図の質問でも、質問の仕方によって回答に若干の変化があります')
     st.write('ここまでは描画可能')
 
-    st.write('dbの宣言開始')
 
     #firebaseの初期化
     if not firebase_admin._apps:
@@ -107,8 +106,6 @@ else:
        firebase_admin.initialize_app(cred)
 
     db = firestore.client()
-
-    st.write('dbの設定完了')
 
     #新しいチャットを作成するための関数 -----------------------------------------------------------------------------------------------
     def create_new_chat():
@@ -137,33 +134,17 @@ else:
 
 
     #主要部分 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-    st.write('主要部分')
-
-    # usersコレクションの参照を取得
-    users_ref = db.collection('users')
-
-    # ドキュメントを取得し、IDを表示
-    docs = users_ref.stream()
-
-    st.title("Users Collection Document IDs")
-    for doc in docs:
-        st.write(doc.id)  # ドキュメントのIDを表示
         
-
     #ユーザーのセッション状態の初期化
-    #if "user" not in st.session_state: #セッションに'user'というキーが存在しない場合、デフォルトのユーザー名をCHATBOT_USERに設定する
-        #A   st.session_state.user = CHATBOT_USER 
+    if "user" not in st.session_state: #セッションに'user'というキーが存在しない場合、デフォルトのユーザー名をCHATBOT_USERに設定する
+       st.session_state.user = st.session_state.username 
 
     #チャットリファレンスの初期化
     if "chats_ref" not in st.session_state:# 'chat_ref'がセッションに存在しない場合、firestoreのデータベースからユーザーのチャットコレクションへのリファレンスを取得する
 
-        st.write('usersを取得開始')#エラーロギング
         users_ref = db.collection("users") #ユーザーのドキュメントを取得
-        st.write('usersの取得終了')#エラーロギング
 
-        st.write('user_refの取得開始')#エラーロギング
         user_ref = users_ref.document(st.session_state.username)
-        st.write('user_refの設定完了')
 
         st.session_state.chats_ref = user_ref.collection("chats") #そのユーザーに関連するチャットのコレクションをchat_refとして保存する
 
@@ -173,7 +154,6 @@ else:
                 doc.to_dict()["title"]
                 for doc in st.session_state.chats_ref.order_by("created").stream()
                 ]
-        st.write('チャットタイトルの取得完了')
 
     #表示中のチャットリファレンスの初期化
     if "displayed_chat_ref" not in st.session_state:
@@ -189,7 +169,6 @@ else:
     
     # Sidebarの構築
     #サイドバーに新しいチャットを開始するボタンと過去のチャットのリストを表示する
-    st.write('サイドバー処理開始')
 
     with st.sidebar:
         #チャットボット使用ユーザーの表示
@@ -208,7 +187,6 @@ else:
             data = doc.to_dict()
             st.button(data["title"], on_click=change_displayed_chat, args=(doc, ))
 
-    print('サイドバー処理終了')
 
     #メッセージの表示
     # displayed_chat_messagesに格納されたメッセージをループし、各メッセージのロール（ユーザーまたはチャットボット）に応じて表示
@@ -342,4 +320,3 @@ else:
             }
             st.session_state.displayed_chat_messages.append(assistant_output_data) #LLMの回答を会話履歴に追加する
             st.session_state.displayed_chat_ref.collection("messages").add(assistant_output_data) #firestoreにLLMの回答を追加する
-
