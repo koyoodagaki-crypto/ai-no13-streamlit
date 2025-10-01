@@ -94,7 +94,7 @@ else:
     #firebaseの初期化
     if not firebase_admin._apps:
         cred = credentials.Certificate(json.loads(st.secrets["firebase"]["firebase_key"]))
-        app = firebase_admin.initialize_app(cred)
+        firebase_admin.initialize_app(cred)
         db = firestore.Client(project=GCP_PROJECT)
     st.write('dbの設定終了')
 
@@ -326,3 +326,4 @@ else:
             }
             st.session_state.displayed_chat_messages.append(assistant_output_data) #LLMの回答を会話履歴に追加する
             st.session_state.displayed_chat_ref.collection("messages").add(assistant_output_data) #firestoreにLLMの回答を追加する
+
