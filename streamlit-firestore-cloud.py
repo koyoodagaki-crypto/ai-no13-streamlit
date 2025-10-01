@@ -179,7 +179,7 @@ else:
         st.title("過去の会話履歴")
 
         #過去のチャット履歴のタイトルをボタンとして表示し、クリック時にchange_displayed_chat関数を呼び出して選択されたチャットを表示する
-        for doc in st.session_state.chats_ref.order_by("created").stream():
+        for doc in st.session_state.chats_ref.stream():
             data = doc.to_dict()
             st.button(data["title"], on_click=change_displayed_chat, args=(doc, ))
 
