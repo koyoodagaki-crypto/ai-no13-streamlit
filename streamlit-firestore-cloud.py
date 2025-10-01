@@ -15,8 +15,9 @@ import json
 #load_dotenv()
 
 #firebaseの初期化
-cred = credentials.Certificate(json.loads(st.secrets["firebase"]["firebase_key"]))
-app = firebase_admin.initialize_app(cred)
+if not firebase_admin._apps:
+   cred = credentials.Certificate(json.loads(st.secrets["firebase"]["firebase_key"]))
+   app = firebase_admin.initialize_app(cred)
 
 #ユーザの質問の要約生成用
 AOAI_API_KEY = st.secrets["api_keys"]["AOAI_API_KEY"]
@@ -80,6 +81,9 @@ if not st.session_state.logged_in:
 #　ログイン後ページ (チャット画面)
 # ===========================
 else:
+    
+    st.write("JSONキー一覧:" ,st.secrets["firebase"]["firebase_key"])
+
     #タイトル表示
     st.title('設備技術 RAGアプリ（プロト）')
     st.write(f"ようこそ {st.session_state.username}さん!")
@@ -322,4 +326,3 @@ else:
             }
             st.session_state.displayed_chat_messages.append(assistant_output_data) #LLMの回答を会話履歴に追加する
             st.session_state.displayed_chat_ref.collection("messages").add(assistant_output_data) #firestoreにLLMの回答を追加する
-
