@@ -92,8 +92,6 @@ else:
     st.text('①質問を送信してから、5秒~10秒のタイムラグがあります。')
     st.text('②まったく同じ質問でも回答が返る場合と返らない場合が稀に有ります。')
     st.text('③同じ意図の質問でも、質問の仕方によって回答に若干の変化があります')
-    st.text('This is test')
-
     st.write('ここまでは描画可能')
 
     #新しいチャットを作成するための関数 -----------------------------------------------------------------------------------------------
@@ -144,10 +142,11 @@ else:
 
     #チャットタイトルの取得
     if "titles" not in st.session_state:
-        st.session_state.titles = [   #firestoreからチャットを作成日時順に取得し、それぞれのチャットのタイトルをリストとして格納する
-                doc.to_dict()["title"]
-                for doc in st.session_state.chats_ref.get().limit(10)
-                ]
+        #st.session_state.titles = [   #firestoreからチャットを作成日時順に取得し、それぞれのチャットのタイトルをリストとして格納する
+         #       doc.to_dict()["title"]
+          #      for doc in st.session_state.chats_ref.get()
+           #     ]
+        st.session_state.titles = 'test'
         st.write('チャットタイトルの取得完了')
 
     #表示中のチャットリファレンスの初期化
