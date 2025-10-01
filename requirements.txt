@@ -4,6 +4,3 @@ streamlit == 1.46.1
 azure-core 
 firestore == 0.0.8
 firebase-admin == 7.1.0
-google-cloud-firestore 
-google-auth
-google-cloud-storage
