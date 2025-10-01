@@ -123,10 +123,13 @@ else:
 
 
     #主要部分 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-
+    st.write('主要部分')
     try:
         users_ref = db1.collection('users')
-        st.write(users_ref)
+        users_ref.document(st.session_state.username).set({
+            "username" : "test"
+        })
+        #st.write(users_ref)
     except Exception as e:
         st.error(f"firestore接続エラー:{e}")
         
