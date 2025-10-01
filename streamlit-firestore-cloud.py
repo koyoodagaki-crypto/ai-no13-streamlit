@@ -16,7 +16,7 @@ import json
 
 #firebaseの初期化
 if not firebase_admin._apps:
-   cred = credentials.Certificate(st.secrets["firebase"]["firebase_key"])
+   cred = credentials.Certificate(json.loads(st.secrets["firebase"]["firebase_key"]))
    app = firebase_admin.initialize_app(cred)
 
 #ユーザの質問の要約生成用
