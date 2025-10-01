@@ -76,14 +76,6 @@ if not st.session_state.logged_in:
 #　ログイン後ページ (チャット画面)
 # ===========================
 else:
-    
-    st.write('dbの宣言開始')
-    #firebaseの初期化
-    if not firebase_admin._apps:
-        cred = credentials.Certificate(json.loads(st.secrets["firebase"]["firebase_key"]))
-        app = firebase_admin.initialize_app(cred)
-        db = firestore.Client()
-    st.write('dbの設定終了')
 
     #st.write("JSONキー一覧:" ,st.secrets["firebase"]["firebase_key"])
 
@@ -97,6 +89,14 @@ else:
     st.text('②まったく同じ質問でも回答が返る場合と返らない場合が稀に有ります。')
     st.text('③同じ意図の質問でも、質問の仕方によって回答に若干の変化があります')
     st.write('ここまでは描画可能')
+
+    st.write('dbの宣言開始')
+    #firebaseの初期化
+    if not firebase_admin._apps:
+        cred = credentials.Certificate(json.loads(st.secrets["firebase"]["firebase_key"]))
+        app = firebase_admin.initialize_app(cred)
+        db = firestore.Client(project=GCP_PROJECT)
+    st.write('dbの設定終了')
 
     #新しいチャットを作成するための関数 -----------------------------------------------------------------------------------------------
     def create_new_chat():
