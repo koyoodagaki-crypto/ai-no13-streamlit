@@ -146,7 +146,7 @@ else:
     if "titles" not in st.session_state:
         st.session_state.titles = [   #firestoreからチャットを作成日時順に取得し、それぞれのチャットのタイトルをリストとして格納する
                 doc.to_dict()["title"]
-                for doc in st.session_state.chats_ref.order_by("created").stream()
+                for doc in st.session_state.chats_ref.stream()
                 ]
         st.write('チャットタイトルの取得完了')
 
@@ -164,7 +164,7 @@ else:
     
     # Sidebarの構築
     #サイドバーに新しいチャットを開始するボタンと過去のチャットのリストを表示する
-    print('サイドバー処理開始')
+    st.write('サイドバー処理開始')
 
     with st.sidebar:
         #チャットボット使用ユーザーの表示
