@@ -146,7 +146,7 @@ else:
     if "titles" not in st.session_state:
         st.session_state.titles = [   #firestoreからチャットを作成日時順に取得し、それぞれのチャットのタイトルをリストとして格納する
                 doc.to_dict()["title"]
-                for doc in st.session_state.chats_ref.stream()
+                for doc in st.session_state.chats_ref.get()
                 ]
         st.write('チャットタイトルの取得完了')
 
