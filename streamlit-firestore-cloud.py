@@ -108,14 +108,14 @@ else:
     def change_displayed_chat(chat_doc):
         # Update titles
         st.session_state.titles = [
-            doc.to_dict()["title"] for doc in st.session_state.chats_ref.order_by("created").stream()  #すべてのチャットのタイトルをストリーム形式で取得する
+            doc.to_dict()["title"] for doc in st.session_state.chats_ref.stream()  #すべてのチャットのタイトルをストリーム形式で取得する
         ]
 
         st.session_state.displayed_chat_ref = chat_doc.reference #引数として渡された 'chat_doc'のリファレンスを設定する➡現在表示されているチャットが特定される
         st.session_state.displayed_chat_title = chat_doc.to_dict()["title"] #chat_docのタイトルを取得する
         st.session_state.displayed_chat_messages = [  #選択されたチャットのメッセージを取得して設定する メッセージコレクションを参照し、timestampで並べる
             msg.to_dict()
-            for msg in chat_doc.reference.collection("messages").order_by("timestamp").stream()
+            for msg in chat_doc.reference.collection("messages").stream()
         ]
 
     # --------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -146,7 +146,7 @@ else:
     if "titles" not in st.session_state:
         st.session_state.titles = [   #firestoreからチャットを作成日時順に取得し、それぞれのチャットのタイトルをリストとして格納する
                 doc.to_dict()["title"]
-                for doc in st.session_state.chats_ref.get()
+                for doc in st.session_state.chats_ref.get().limit(10)
                 ]
         st.write('チャットタイトルの取得完了')
 
