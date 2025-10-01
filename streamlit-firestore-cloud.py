@@ -85,7 +85,6 @@ else:
     st.text('①質問を送信してから、5秒~10秒のタイムラグがあります。')
     st.text('②まったく同じ質問でも回答が返る場合と返らない場合が稀に有ります。')
     st.text('③同じ意図の質問でも、質問の仕方によって回答に若干の変化があります')
-    st.write('ここまでは描画可能')
 
 
     #firebaseの初期化
@@ -320,3 +319,4 @@ else:
             }
             st.session_state.displayed_chat_messages.append(assistant_output_data) #LLMの回答を会話履歴に追加する
             st.session_state.displayed_chat_ref.collection("messages").add(assistant_output_data) #firestoreにLLMの回答を追加する
+
