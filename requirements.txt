@@ -6,3 +6,4 @@ firestore
 firebase_admin
 google-cloud-core 
 google-cloud-firestore 
+json
