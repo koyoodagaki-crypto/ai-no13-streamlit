@@ -1,7 +1,6 @@
 import streamlit as st
 
 import firebase_admin
-import firebase
 from firebase_admin import credentials
 from firebase_admin import firestore
 from openai import AzureOpenAI
@@ -343,3 +342,4 @@ else:
             }
             st.session_state.displayed_chat_messages.append(assistant_output_data) #LLMの回答を会話履歴に追加する
             st.session_state.displayed_chat_ref.collection("messages").add(assistant_output_data) #firestoreにLLMの回答を追加する
+
