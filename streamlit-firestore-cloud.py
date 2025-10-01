@@ -90,14 +90,24 @@ else:
     st.write('ここまでは描画可能')
 
     st.write('dbの宣言開始')
+
     #firebaseの初期化
     if not firebase_admin._apps:
-        cred_dict = json.loads(st.secrets["firebase"]["firebase_key"])
-        cred = credentials.Certificate(cred_dict)
-        firebase_admin.initialize_app(cred)
-        db1 = firestore.Client(project=GCP_PROJECT)
-    st.write('dbの設定終了')
+       cred = credentials.Certificate({
+            "type": st.secrets['firebase']['type'],
+            "project_id": st.secrets['firebase']['project_id'],
+            "private_key_id": st.secrets['firebase']['private_key_id'],
+            "private_key": st.secrets['firebase']['private_key'],
+            "client_id": st.secrets['firebase']['client_id'],
+            "auth_uri": st.secrets['firebase']['auth_uri'],
+            "token_uri": st.secrets['firebase']['token_uri'],
+            "auth_provider_x509_cert_url": st.secrets['firebase']['auth_provider_x509_cert_url'],
+            "client_x509_cert_url": st.secrets['firebase']['client_x509_cert_url'],
+            "universe_domain": st.secrets['firebase']['universe_domain']
+       })
+       firebase_admin.initialize_app(cred)
 
+    db = firestore.Client(project=GCP_PROJECT)
 
     #新しいチャットを作成するための関数 -----------------------------------------------------------------------------------------------
     def create_new_chat():
@@ -126,8 +136,9 @@ else:
 
     #主要部分 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
     st.write('主要部分')
+
     try:
-        users_ref = db1.collection('users')
+        users_ref = db.collection('users')
         users_ref.document(st.session_state.username).set({
             "username" : "test"
         })
@@ -143,7 +154,7 @@ else:
     #チャットリファレンスの初期化
     if "chats_ref" not in st.session_state:# 'chat_ref'がセッションに存在しない場合、firestoreのデータベースからユーザーのチャットコレクションへのリファレンスを取得する
         st.write('usersを取得開始')#エラーロギング
-        users_ref = db1.collection("users") #ユーザーのドキュメントを取得
+        users_ref = db.collection("users") #ユーザーのドキュメントを取得
         st.write('usersの取得終了')#エラーロギング
 
         st.write('queryの取得開始')#エラーロギング
@@ -328,5 +339,3 @@ else:
             }
             st.session_state.displayed_chat_messages.append(assistant_output_data) #LLMの回答を会話履歴に追加する
             st.session_state.displayed_chat_ref.collection("messages").add(assistant_output_data) #firestoreにLLMの回答を追加する
-
-
