@@ -133,14 +133,14 @@ else:
     #チャットリファレンスの初期化
     if "chats_ref" not in st.session_state:# 'chat_ref'がセッションに存在しない場合、firestoreのデータベースからユーザーのチャットコレクションへのリファレンスを取得する
         st.write('usersを取得開始')#エラーロギング
-        user_ref = db.collection("users") #ユーザーのドキュメントを取得
+        users_ref = db.collection("users") #ユーザーのドキュメントを取得
         st.write('usersの取得終了')#エラーロギング
 
         st.write('queryの取得開始')#エラーロギング
-        query = user_ref.where("username","==",st.session_state.username).limit(1).get()
+        user_ref = users_ref.document(st.session_state.username)
         st.write('queryの設定完了')
-        doc = query[0]
-        st.session_state.chats_ref = user_ref.document(doc.id).collection("chats") #そのユーザーに関連するチャットのコレクションをchat_refとして保存する
+        #doc = user_ref.get()
+        st.session_state.chats_ref = user_ref.collection("chats") #そのユーザーに関連するチャットのコレクションをchat_refとして保存する
 
     #チャットタイトルの取得
     if "titles" not in st.session_state:
