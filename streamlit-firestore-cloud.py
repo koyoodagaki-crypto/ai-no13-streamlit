@@ -99,6 +99,7 @@ else:
             "private_key_id": st.secrets['firebase']['private_key_id'],
             "private_key": st.secrets['firebase']['private_key'],
             "client_id": st.secrets['firebase']['client_id'],
+            "client_email": st.secrets['firebase']['client_email'],
             "auth_uri": st.secrets['firebase']['auth_uri'],
             "token_uri": st.secrets['firebase']['token_uri'],
             "auth_provider_x509_cert_url": st.secrets['firebase']['auth_provider_x509_cert_url'],
@@ -339,3 +340,4 @@ else:
             }
             st.session_state.displayed_chat_messages.append(assistant_output_data) #LLMの回答を会話履歴に追加する
             st.session_state.displayed_chat_ref.collection("messages").add(assistant_output_data) #firestoreにLLMの回答を追加する
+
