@@ -81,6 +81,7 @@ if not st.session_state.logged_in:
 #　ログイン後ページ (チャット画面)
 # ===========================
 else:
+    
     print(st.session_state.username)
 
     #タイトル表示
@@ -123,6 +124,15 @@ else:
     st.write('dbの宣言開始')
     db = firestore.Client(project=GCP_PROJECT)
     st.write('dbの設定終了')
+
+    try:
+        users_ref = db.collection('users')
+        docs = users_ref.stream()
+        for doc in docs:
+            st.write(doc.id)
+    except Exception as e:
+        st.error(f"firestore接続エラー:{e}")
+        
 
     #ユーザーのセッション状態の初期化
     #if "user" not in st.session_state: #セッションに'user'というキーが存在しない場合、デフォルトのユーザー名をCHATBOT_USERに設定する
