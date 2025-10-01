@@ -45,7 +45,6 @@ system_message_chat_conversation = "与えられた情報に従って正確で�
 # 定義ここまで ------------------------------------------------------------------------------------------------------------------------------
 
 #ユーザー名チェック
-
 username = st.secrets.api_keys.USER_NAMES.split(",")
 #print(username)
 
@@ -127,9 +126,7 @@ else:
 
     try:
         users_ref = db1.collection('users')
-        docs = users_ref.stream()
-        for doc in docs:
-            st.write(doc.id)
+        st.write(users_ref)
     except Exception as e:
         st.error(f"firestore接続エラー:{e}")
         
