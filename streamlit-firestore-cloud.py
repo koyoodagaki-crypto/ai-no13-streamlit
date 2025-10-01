@@ -14,11 +14,6 @@ import json
 #環境ファイルの読み込み
 #load_dotenv()
 
-#firebaseの初期化
-if not firebase_admin._apps:
-   cred = credentials.Certificate(json.loads(st.secrets["firebase"]["firebase_key"]))
-   firebase_admin.initialize_app(cred)
-
 #ユーザの質問の要約生成用
 AOAI_API_KEY = st.secrets["api_keys"]["AOAI_API_KEY"]
 AOAI_API_VERSION = st.secrets["api_keys"]["AOAI_API_VERSION"]
@@ -82,7 +77,15 @@ if not st.session_state.logged_in:
 # ===========================
 else:
     
-    st.write("JSONキー一覧:" ,st.secrets["firebase"]["firebase_key"])
+    st.write('dbの宣言開始')
+    #firebaseの初期化
+    if not firebase_admin._apps:
+        cred = credentials.Certificate(json.loads(st.secrets["firebase"]["firebase_key"]))
+        app = firebase_admin.initialize_app(cred)
+        db = firestore.Client()
+    st.write('dbの設定終了')
+
+    #st.write("JSONキー一覧:" ,st.secrets["firebase"]["firebase_key"])
 
     #タイトル表示
     st.title('設備技術 RAGアプリ（プロト）')
@@ -121,9 +124,6 @@ else:
 
 
     #主要部分 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-    st.write('dbの宣言開始')
-    db = firestore.Client(project=GCP_PROJECT)
-    st.write('dbの設定終了')
 
     try:
         users_ref = db.collection('users')
