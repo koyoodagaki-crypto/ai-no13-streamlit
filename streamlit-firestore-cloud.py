@@ -129,7 +129,7 @@ else:
         users_ref.document(st.session_state.username).set({
             "username" : "test"
         })
-        #st.write(users_ref)
+        st.write("セット完了")
     except Exception as e:
         st.error(f"firestore接続エラー:{e}")
         
@@ -326,3 +326,4 @@ else:
             }
             st.session_state.displayed_chat_messages.append(assistant_output_data) #LLMの回答を会話履歴に追加する
             st.session_state.displayed_chat_ref.collection("messages").add(assistant_output_data) #firestoreにLLMの回答を追加する
+
