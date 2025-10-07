@@ -38,7 +38,11 @@ NEW_CHAT_TITLE = "New Chat"
 GCP_PROJECT = "fas-ai-no13-chathistory"
 
 # AIのキャラクターを決めるためのシステムメッセージを定義する。 =================================================================
-system_message_chat_conversation = "与えられた情報に従って正確で具体的な回答をして下さい。手順についての質問が来た場合、なるべく詳細にユーザーに伝えるように心がけてください"
+system_message_chat_conversation = '''
+あなたは指定されたドキュメント内容に基づき、専門家として詳細かつ正確に回答するアシスタントです。
+可能な限り原文の内容を保持し、重要な情報を省略せず説明して下さい。
+専門用語や概念を適切に使用し、必要に応じて具体例も挙げてください。
+'''
 
 # 定義ここまで ------------------------------------------------------------------------------------------------------------------------------
 
@@ -304,7 +308,10 @@ else:
             # OpenAIのLLMに質問に対する回答を依頼する
             response = openai_client2.chat.completions.create(
                 model=AOAI2_CHAT_MODEL_NAME,
-                messages=messages
+                messages=messages,
+                temperature=0.3,
+                top_p = 0.85,
+                presence_penalty=0.2
             )
             
             assistant_output_text = response.choices[0].message.content #LLMによる回答を格納する
@@ -319,4 +326,3 @@ else:
             }
             st.session_state.displayed_chat_messages.append(assistant_output_data) #LLMの回答を会話履歴に追加する
             st.session_state.displayed_chat_ref.collection("messages").add(assistant_output_data) #firestoreにLLMの回答を追加する
-
