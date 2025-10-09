@@ -81,14 +81,16 @@ else:
     #st.write("JSONキー一覧:" ,st.secrets["firebase"]["firebase_key"])
 
     #タイトル表示
-    st.title('設備技術 RAGアプリ（プロト）')
+    st.title('設備技術 RAGアプリ（プロトタイプ）')
     st.write(f"ようこそ {st.session_state.username}さん!")
 
-    #注意点の表記
-    st.subheader('※注意点※')
-    st.text('①質問を送信してから、5秒~10秒のタイムラグがあります。')
-    st.text('②まったく同じ質問でも回答が返る場合と返らない場合が稀に有ります。')
-    st.text('③同じ意図の質問でも、質問の仕方によって回答に若干の変化があります')
+
+    with st.container(border=True):
+        #注意点の表記
+        st.subheader('※注意点※')
+        st.text('①質問を送信してから、5秒~10秒のタイムラグがあります。')
+        st.text('②まったく同じ質問でも回答が返る場合と返らない場合が稀に有ります。')
+        st.text('③同じ意図の質問でも、質問の仕方によって回答に若干の変化があります')
 
 
     #firebaseの初期化
@@ -186,9 +188,9 @@ else:
         st.title("過去の会話履歴")
 
         #過去のチャット履歴のタイトルをボタンとして表示し、クリック時にchange_displayed_chat関数を呼び出して選択されたチャットを表示する
-        for doc in st.session_state.chats_ref.stream():
+        for i , doc in enumerate(st.session_state.chats_ref.order_by("created").stream()):
             data = doc.to_dict()
-            st.button(data["title"], on_click=change_displayed_chat, args=(doc, ))
+            st.button(data["title"], on_click=change_displayed_chat, args=(doc, ),key=f"id_{i}")
 
 
     #メッセージの表示
