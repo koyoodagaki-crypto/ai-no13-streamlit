@@ -81,7 +81,7 @@ else:
     #st.write("JSONキー一覧:" ,st.secrets["firebase"]["firebase_key"])
 
     #タイトル表示
-    st.title('設備技術 RAGアプリ（プロトタイプ）')
+    st.title('設備技術 RAGアプリ（プロト）')
     st.write(f"ようこそ {st.session_state.username}さん!")
 
 
@@ -328,3 +328,4 @@ else:
             }
             st.session_state.displayed_chat_messages.append(assistant_output_data) #LLMの回答を会話履歴に追加する
             st.session_state.displayed_chat_ref.collection("messages").add(assistant_output_data) #firestoreにLLMの回答を追加する
+
